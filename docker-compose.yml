@@ -1,0 +1,69 @@
+postgresql:
+  image: sameersbn/postgresql:9.4-11
+  environment:
+    - DB_NAME=youtubeadl
+    - DB_USER=youtubeadl
+    - DB_PASS=password
+  volumes:
+    - ~/dockerfiles/youtube-audio-dl/postgresql:/var/lib/postgresql
+  expose:
+    - "5432"
+
+rabbitmq:
+  image: jcalazan/rabbitmq
+  expose:
+    - "15672"
+
+# NOTES:
+#   - The C_FORCE_ROOT variable allows celery to run as the root user.
+celery:
+  build: django/
+  environment:
+    - C_FORCE_ROOT=true
+    - DATABASE_HOST=postgresql
+    - BROKER_URL=amqp://guest:guest@rabbitmq//
+  working_dir: /youtube-audio-dl
+  command: bash -c "sleep 3 && celery -A youtubeadl worker -E -l info --concurrency=3"
+  volumes:
+    - .:/youtube-audio-dl
+  links:
+    - postgresql
+    - rabbitmq
+
+# NOTES:
+#   - The C_FORCE_ROOT variable allows celery to run as the root user.
+flower:
+  build: django/
+  environment:
+    - C_FORCE_ROOT=true
+    - DATABASE_HOST=postgresql
+    - BROKER_URL=amqp://guest:guest@rabbitmq//
+  working_dir: /youtube-audio-dl
+  command: bash -c "sleep 3 && celery -A youtubeadl flower --port=5555"
+  volumes:
+    - .:/youtube-audio-dl
+  expose:
+    - "5555"
+  links:
+    - postgresql
+    - rabbitmq
+
+django:
+  build: django/
+  environment:
+    - DATABASE_HOST=postgresql
+    - BROKER_URL=amqp://guest:guest@rabbitmq//
+  working_dir: /youtube-audio-dl
+  command: bash -c "sleep 3 && python manage.py migrate --noinput && python manage.py runserver_plus 0.0.0.0:80" 
+  volumes:
+    - .:/youtube-audio-dl
+  expose:
+    - "80"
+  links:
+    - postgresql
+    - rabbitmq
+
+tor:
+  build: tor-hidden-service/
+  links:
+    - django:web

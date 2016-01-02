@@ -1,0 +1,15 @@
+---
+
+- name: Ensure that a daily youtube-dl package update job exists
+  cron: name="daily youtube-dl update"
+        special_time=daily
+        user=root
+        job=". /webapps/youtubeadl/bin/activate && pip install -U youtube-dl && supervisorctl restart all"
+        state=present
+
+- name: Ensure that a daily file cleanup job exists
+  cron: name="daily file cleanup"
+        special_time=daily
+        user=root
+        job="cd /webapps/youtubeadl/media && rm -rf *.mp3"
+        state=present

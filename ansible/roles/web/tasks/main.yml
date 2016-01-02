@@ -1,0 +1,31 @@
+---
+
+- name: Install additional packages
+  apt: name={{ item }} update_cache={{ update_apt_cache }} force=yes state=installed
+  with_items:
+    - ffmpeg
+    - libavcodec-extra-53
+  tags: packages
+
+- include: create_users_and_groups.yml
+
+- include: setup_virtualenv.yml
+  tags: virtualenv
+
+- include: setup_git_repo.yml
+  tags: deploy
+
+- include: setup_django_app.yml
+  tags: deploy
+
+- include: setup_supervisor.yml
+  tags: supervisor
+
+- include: set_file_permissions.yml
+  tags: deploy
+
+- include: setup_nginx.yml
+  tags: nginx
+
+- include: setup_cron_jobs.yml
+  tags: cron

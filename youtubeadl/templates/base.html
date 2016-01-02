@@ -1,0 +1,67 @@
+{% load staticfiles %}
+
+<!-- From django-compressor app -->
+{% load compress %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>{% block title %}Convert YouTube videos to MP3 audio{% endblock %} | YouTube Audio Downloader</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+
+    {% compress css %}
+    <!-- CSS -->
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/font-awesome/css/font-awesome.css' %}" rel="stylesheet">
+
+    <!-- Add custom CSS here -->
+    <style>
+        body {margin-top: 75px;}
+    </style>
+
+    {% block extracss %}{% endblock %}
+    {% endcompress %}
+
+   <!-- Go to www.addthis.com/dashboard to customize your tools -->
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid={{ addthis_publisher_id }}"></script>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <a class="navbar-brand" href="/">
+          <span class="fa fa-music"></span> YouTube Audio Downloader</a>
+      </div>
+    </nav>
+
+      <div class="container">
+        {% block main %}{% endblock %}
+      </div><!-- /.container -->
+
+      {% compress js %}
+      <!-- JavaScript -->
+      <!-- Placed at the end of the document so the pages load faster -->
+      <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+      <script src="{% static 'vendor/bootstrap/js/bootstrap.js' %}"></script>
+      {% block extrajs %}{% endblock %}
+      {% endcompress %}
+
+      <!-- Google Adsense -->
+      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+
+      <!-- Google Analytics -->
+      <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', '{{ google_analytics_tracking_id }}', 'auto');
+        ga('send', 'pageview');
+      </script>
+  </body>
+</html>

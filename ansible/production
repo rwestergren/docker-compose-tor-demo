@@ -1,0 +1,8 @@
+[all:vars]
+env=production
+
+[webservers]
+www.youtubeadl.com
+
+[dbservers]
+www.youtubeadl.com
