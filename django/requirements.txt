@@ -11,5 +11,5 @@ gunicorn ~> 19.5.0
 ipdb==0.8
 ipython[notebook]==3.2.1
 psycopg2==2.6
-Werkzeug==0.10.4
+werkzeug>=0.15.3
 youtube-dl>=2014.06.26
